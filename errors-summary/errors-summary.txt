@@ -1,0 +1,114 @@
+6 different kind of errors affecting 483 article versions - 5034 article versions did not throw an error.
+
+Error on line 443 (5):
+
+elife-00051-v1.xml:
+
+Error on line 443 of eLife-elem-citation-driver-final-compiled.xsl:
+  XPTY0004: A sequence of more than one item is not allowed as the first argument of
+  lower-case() ("United Nations", "Department of Economic and Soc...") 
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#437)
+     processing /article/back[1]/ref-list[1]/ref[40]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#622)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#625)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#177)
+     processing /
+A sequence of more than one item is not allowed as the first argument of lower-case() ("United Nations", "Department of Economic and Soc...")
+
+Error on line 463 (462):
+
+elife-00299-v2.xml:
+
+Error on line 463 of eLife-elem-citation-driver-final-compiled.xsl:
+  XPTY0004: A sequence of more than one item is not allowed as the first argument of
+  lower-case() ("Klein", "Clinical Immunization Safety A...") 
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#437)
+     processing /article/back[1]/ref-list[1]/ref[14]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#622)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#625)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#177)
+     processing /
+A sequence of more than one item is not allowed as the first argument of lower-case() ("Klein", "Clinical Immunization Safety A...")
+
+Error on line 543 (7):
+
+elife-00354-v1.xml:
+
+Error on line 543 of eLife-elem-citation-driver-final-compiled.xsl:
+  XPTY0004: A sequence of more than one item is not allowed as the second argument of concat()
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#437)
+     processing /article/back[1]/ref-list[1]/ref[10]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#622)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#625)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#177)
+     processing /
+A sequence of more than one item is not allowed as the second argument of concat()
+
+Error on line 773 (5):
+
+elife-07218-v2.xml:
+
+Error on line 773 of eLife-elem-citation-driver-final-compiled.xsl:
+  XPTY0004: A sequence of more than one item is not allowed as the first argument of number()
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1005)
+     processing /article/back[1]/ref-list[1]/ref[50]/element-citation[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1002)
+     processing /article/back[1]/ref-list[1]/ref[50]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1002)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1005)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#178)
+     processing /
+A sequence of more than one item is not allowed as the first argument of number()
+
+Error on line 1113 (1):
+
+elife-09351-v2.xml:
+
+Error on line 1113 of eLife-elem-citation-driver-final-compiled.xsl:
+  XPTY0004: A sequence of more than one item is not allowed as the first argument of
+  ends-with() ("Blackwell: Hoboken, NJ, United...", "p") 
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1340)
+     processing /article/back[1]/ref-list[1]/ref[4]/element-citation[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1337)
+     processing /article/back[1]/ref-list[1]/ref[4]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1337)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1340)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#179)
+     processing /
+A sequence of more than one item is not allowed as the first argument of ends-with() ("Blackwell: Hoboken, NJ, United...", "p")
+
+Error on line 2870 (3):
+
+elife-19571-v2.xml:
+
+Error on line 2870 of eLife-elem-citation-driver-final-compiled.xsl:
+  FORG0001: Invalid date "2016" (Too short)
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#2666)
+     processing /article/back[1]/ref-list[1]/ref[15]/element-citation[1]/date-in-citation[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#2895)
+     processing /article/back[1]/ref-list[1]/ref[15]/element-citation[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#2892)
+     processing /article/back[1]/ref-list[1]/ref[15]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#2892)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#2895)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#185)
+     processing /
+Invalid date "2016" (Too short)
