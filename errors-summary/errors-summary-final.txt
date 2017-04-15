@@ -1,0 +1,33 @@
+1 kind of errors affecting 7 article versions - 5930 article versions did not throw an error.
+
+Error on line 789 (7):
+
+elife-11205-v2.xml:
+
+Error on line 789 of eLife-elem-citation-driver-final-compiled.xsl:
+  XPTY0004: A sequence of more than one item is not allowed as the first argument of number()
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1021)
+     processing /article/back[1]/ref-list[1]/ref[56]/element-citation[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1018)
+     processing /article/back[1]/ref-list[1]/ref[56]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1018)
+     processing /article/back[1]/ref-list[1]
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#1021)
+     processing /article/back[1]
+  in built-in template rule
+  at xsl:apply-templates (file:/Users/nlisgo/Sites/sandbox/schematron-testing/reference-schematron/eLife-elem-citation-driver-final-compiled.xsl#178)
+     processing /
+A sequence of more than one item is not allowed as the first argument of number()
+
+Here is a list of of all the articles affected by the above errors prefixed with the line number of the error:
+
+789: elife-11205-v2.xml (#, * - https://github.com/nlisgo/schematron-testing/blob/98b085d6bf92dad0141c02eed81a51ce36f71de3/errors-summary/errors-summary.txt#L596)
+789: elife-13098-v2.xml (#, * - https://github.com/nlisgo/schematron-testing/blob/98b085d6bf92dad0141c02eed81a51ce36f71de3/errors-summary/errors-summary.txt#L597)
+789: elife-13098-v3.xml (#, * - https://github.com/nlisgo/schematron-testing/blob/98b085d6bf92dad0141c02eed81a51ce36f71de3/errors-summary/errors-summary.txt#L598)
+789: elife-20320-v1.xml (#, * - https://github.com/nlisgo/schematron-testing/blob/98b085d6bf92dad0141c02eed81a51ce36f71de3/errors-summary/errors-summary.txt#L542)
+789: elife-21615-v2.xml (#)
+789: elife-23886-v2.xml (#)
+789: elife-24482-v2.xml (#)
+
+# - Also failed the eLife-elem-citation-driver-pre-edit schematron
+* - Article version failed previous run. A link has been supplied to the reference in the errors-summary.txt

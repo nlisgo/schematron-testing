@@ -187,6 +187,10 @@
       <xsl:apply-templates select="/" mode="M13"/>
       <xsl:apply-templates select="/" mode="M14"/>
       <xsl:apply-templates select="/" mode="M15"/>
+      <xsl:apply-templates select="/" mode="M16"/>
+      <xsl:apply-templates select="/" mode="M17"/>
+      <xsl:apply-templates select="/" mode="M18"/>
+      <xsl:apply-templates select="/" mode="M19"/>
    </xsl:template>
 
    <!--SCHEMATRON PATTERNS-->
@@ -436,16 +440,70 @@
       </xsl:choose>
    </xsl:template>
 
+   <!--PATTERN element-citation-general-pre-edit-testselement-citation General Pre-edit Tests-->
+
+
+	  <!--RULE elem-citation-general-pre-edit-->
+   <xsl:template match="element-citation" priority="102" mode="M3">
+
+		<!--REPORT warning-->
+      <xsl:if test="person-group/name[not(given-names)]">
+         <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                      xmlns:osf="http://www.oxygenxml.com/sch/functions">
+            <xsl:text>Warning:</xsl:text>
+            <xsl:text>[warning-elem-cit-gen-name-2] Each &lt;name&gt; element in a reference must contain a &lt;given-names&gt; element. Reference '</xsl:text>
+            <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+            <xsl:text>' does not.</xsl:text>
+         </xsl:message>
+      </xsl:if>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M3"/>
+   </xsl:template>
+
+	  <!--RULE elem-citation-general-year-pre-edit-->
+   <xsl:template match="element-citation/year" priority="101" mode="M3">
+      <xsl:variable name="YYYY" select="substring(normalize-space(.), 1, 4)"/>
+      <xsl:variable name="current-year" select="year-from-date(current-date())"/>
+
+		    <!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="(1900 le number($YYYY)) and (number($YYYY) le ($current-year + 5))"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warn-elem-cit-gen-date-1-2] The numeric value of the first 4 digits of the &lt;year&gt; element should be between 1900 and the current year + 5 years (inclusive). Reference '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+               <xsl:text>' does not meet this requirement as it contains the value '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="."/>
+               <xsl:text>'. </xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M3"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M3"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M3">
+      <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
+                           of an attribute-->
+         <xsl:when test="not(@*)">
+            <xsl:apply-templates select="node()" mode="M3"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:apply-templates select="@*|node()" mode="M3"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+
    <!--PATTERN element-citation-high-testsHigh-level Tests for 'element-citation'-->
 
 
 	  <!--RULE ref-list-->
-   <xsl:template match="ref-list" priority="104" mode="M3">
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M3"/>
+   <xsl:template match="ref-list" priority="104" mode="M4">
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
    </xsl:template>
 
 	  <!--RULE ref-->
-   <xsl:template match="ref" priority="103" mode="M3">
+   <xsl:template match="ref" priority="103" mode="M4">
       <xsl:variable name="name"
                     select="lower-case(if (local-name(element-citation/person-group[1]/*[1])='name')       then (element-citation/person-group[1]/name[1]/surname)       else (element-citation/person-group[1]/*[1]))"/>
       <xsl:variable name="name2"
@@ -574,11 +632,11 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M3"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
    </xsl:template>
 
 	  <!--RULE xref-->
-   <xsl:template match="xref[@ref-type='bibr']" priority="102" mode="M3">
+   <xsl:template match="xref[@ref-type='bibr']" priority="102" mode="M4">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -593,11 +651,11 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M3"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-->
-   <xsl:template match="element-citation" priority="101" mode="M3">
+   <xsl:template match="element-citation" priority="101" mode="M4">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -628,17 +686,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M3"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M3"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M3">
+   <xsl:template match="text()" priority="-1" mode="M4"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M4">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M3"/>
+            <xsl:apply-templates select="node()" mode="M4"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M3"/>
+            <xsl:apply-templates select="@*|node()" mode="M4"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -649,7 +707,7 @@
 	  <!--RULE elem-citation-journal-->
    <xsl:template match="element-citation[@publication-type='journal']"
                  priority="108"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -832,13 +890,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-article-title-->
    <xsl:template match="element-citation[@publication-type='journal']/article-title"
                  priority="107"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -853,13 +911,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-volume-->
    <xsl:template match="element-citation[@publication-type='journal']/volume"
                  priority="106"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -874,13 +932,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-fpage-->
    <xsl:template match="element-citation[@publication-type='journal']/fpage"
                  priority="105"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -909,13 +967,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-elocation-id-->
    <xsl:template match="element-citation[@publication-type='journal']/elocation-id"
                  priority="104"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -930,13 +988,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-comment-->
    <xsl:template match="element-citation[@publication-type='journal']/comment"
                  priority="103"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -965,13 +1023,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-pub-id-pmid-->
    <xsl:template match="element-citation[@publication-type='journal']/pub-id[@pub-id-type='pmid']"
                  priority="102"
-                 mode="M4">
+                 mode="M5">
 
 		<!--REPORT error-->
       <xsl:if test="matches(.,'\D')">
@@ -985,13 +1043,13 @@
             <xsl:text>.</xsl:text>
          </xsl:message>
       </xsl:if>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-journal-pub-id-->
    <xsl:template match="element-citation[@publication-type='journal']/pub-id"
                  priority="101"
-                 mode="M4">
+                 mode="M5">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1008,17 +1066,109 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M4"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M4"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M4">
+   <xsl:template match="text()" priority="-1" mode="M5"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M5">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M4"/>
+            <xsl:apply-templates select="node()" mode="M5"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M4"/>
+            <xsl:apply-templates select="@*|node()" mode="M5"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+
+   <!--PATTERN element-citation-journal-pre-edit-testselement-citation publication-type="journal" Pre-edit Tests-->
+
+
+	  <!--RULE elem-citation-journal-pre-edit-->
+   <xsl:template match="element-citation[@publication-type='journal']"
+                 priority="101"
+                 mode="M6">
+      <xsl:variable name="journal-doi" select="'journal-DOI.xml'"/>
+
+		    <!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="count(volume) = 1 or comment/text()='In press'"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warning-elem-cit-journal-5-2] There should be either a &lt;volume&gt; element within a &lt;element-citation&gt; of type 'journal', or a &lt;comment&gt; with content 'In press'. Reference '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+               <xsl:text>' has neither.</xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--REPORT warning-->
+      <xsl:if test="fpage and not(lpage)">
+         <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                      xmlns:osf="http://www.oxygenxml.com/sch/functions">
+            <xsl:text>Warning:</xsl:text>
+            <xsl:text>[warning-elem-cit-journal-6-8] If &lt;fpage&gt; is present, &lt;lpage&gt; should also be present. Reference '</xsl:text>
+            <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+            <xsl:text>' does not have an &lt;lpage&gt; element.</xsl:text>
+         </xsl:message>
+      </xsl:if>
+
+		    <!--REPORT warning-->
+      <xsl:if test="matches(fpage,'\D') or matches(lpage, '\D')">
+         <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                      xmlns:osf="http://www.oxygenxml.com/sch/functions">
+            <xsl:text>Warning:</xsl:text>
+            <xsl:text>[warning-elem-cit-journal-6-9] The content of both &lt;fpage&gt; and &lt;lpage&gt; should be all numeric. Reference '</xsl:text>
+            <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+            <xsl:text>' has &lt;fpage&gt;: </xsl:text>
+            <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="fpage"/>
+            <xsl:text> and &lt;lpage&gt;: </xsl:text>
+            <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="lpage"/>
+            <xsl:text>.</xsl:text>
+         </xsl:message>
+      </xsl:if>
+
+		    <!--REPORT warning-->
+      <xsl:if test="comment/text()='In press'">
+         <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                      xmlns:osf="http://www.oxygenxml.com/sch/functions">
+            <xsl:text>Warning:</xsl:text>
+            <xsl:text>[warning-elem-cit-journal-6-10] This citation has a &lt;comment&gt; with content 'In press' in Reference '</xsl:text>
+            <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+            <xsl:text>'. Check for updates.</xsl:text>
+         </xsl:message>
+      </xsl:if>
+
+		    <!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="pub-id/@pub-id-type='doi' or       (normalize-space(document($journal-doi)/journals/journal[name=normalize-space(current()/source)]/year) &gt; substring(normalize-space(year),1,4))"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warning-elem-cit-journal-9-2] The citation does not have a pub-id with pub-id-type of 'doi', and the source is not one known to not have a DOI. Check for the missing DOI for Reference '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+               <xsl:text>' with &lt;source&gt; '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="source"/>
+               <xsl:text>' and &lt;year&gt; </xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="year"/>
+               <xsl:text> </xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M6"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M6"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M6">
+      <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
+                           of an attribute-->
+         <xsl:when test="not(@*)">
+            <xsl:apply-templates select="node()" mode="M6"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:apply-templates select="@*|node()" mode="M6"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -1029,7 +1179,7 @@
 	  <!--RULE elem-citation-book-->
    <xsl:template match="element-citation[@publication-type='book']"
                  priority="107"
-                 mode="M5">
+                 mode="M7">
       <xsl:variable name="publisher-locations" select="'publisher-locations.xml'"/>
 
 		    <!--ASSERT error-->
@@ -1203,13 +1353,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
 
 	  <!--RULE -->
    <xsl:template match="element-citation[@publication-type='book']/person-group"
                  priority="106"
-                 mode="M5">
+                 mode="M7">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1224,13 +1374,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-book-chapter-title-->
    <xsl:template match="element-citation[@publication-type='book']/chapter-title"
                  priority="105"
-                 mode="M5">
+                 mode="M7">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1273,13 +1423,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-book-publisher-name-->
    <xsl:template match="element-citation[@publication-type='book']/publisher-name"
                  priority="104"
-                 mode="M5">
+                 mode="M7">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1294,13 +1444,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-book-edition-->
    <xsl:template match="element-citation[@publication-type='book']/edition"
                  priority="103"
-                 mode="M5">
+                 mode="M7">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1315,13 +1465,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-book-pub-id-pmid-->
    <xsl:template match="element-citation[@publication-type='book']/pub-id[@pub-id-type='pmid']"
                  priority="102"
-                 mode="M5">
+                 mode="M7">
 
 		<!--REPORT error-->
       <xsl:if test="matches(.,'\D')">
@@ -1335,13 +1485,13 @@
             <xsl:text>.</xsl:text>
          </xsl:message>
       </xsl:if>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-book-pub-id-->
    <xsl:template match="element-citation[@publication-type='book']/pub-id"
                  priority="101"
-                 mode="M5">
+                 mode="M7">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1358,17 +1508,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M5"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M5"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M5">
+   <xsl:template match="text()" priority="-1" mode="M7"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M7">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M5"/>
+            <xsl:apply-templates select="node()" mode="M7"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M5"/>
+            <xsl:apply-templates select="@*|node()" mode="M7"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -1379,7 +1529,7 @@
 	  <!--RULE elem-citation-data-->
    <xsl:template match="element-citation[@publication-type='data']"
                  priority="104"
-                 mode="M6">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1532,13 +1682,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M6"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-data-pub-id-doi-->
    <xsl:template match="element-citation[@publication-type='data']/pub-id[@pub-id-type='doi']"
                  priority="103"
-                 mode="M6">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1555,13 +1705,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M6"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-data-pub-id-->
    <xsl:template match="element-citation[@publication-type='data']/pub-id"
                  priority="102"
-                 mode="M6">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1594,13 +1744,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M6"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-data-ext-link-->
    <xsl:template match="element-citation[@publication-type='data']/ext-link"
                  priority="101"
-                 mode="M6">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1649,17 +1799,88 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M6"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M6"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M6">
+   <xsl:template match="text()" priority="-1" mode="M8"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M8">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M6"/>
+            <xsl:apply-templates select="node()" mode="M8"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M6"/>
+            <xsl:apply-templates select="@*|node()" mode="M8"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+
+   <!--PATTERN element-citation-data-pre-edit-testselement-citation publication-type="data" Pre-edit Tests-->
+
+
+	  <!--RULE elem-citation-data-pre-edit-->
+   <xsl:template match="element-citation[@publication-type='data']"
+                 priority="102"
+                 mode="M9">
+
+		<!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="person-group"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warning-elem-cit-data-2-1] There should be at least one &lt;person-group&gt; element. Reference '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+               <xsl:text>' has none.</xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="source"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warning-elem-cit-data-11] Please provide the name of the repository where this data is stored.</xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+   </xsl:template>
+
+	  <!--RULE elem-citation-data-person-group-pre-edit-->
+   <xsl:template match="element-citation[@publication-type='data']/person-group"
+                 priority="101"
+                 mode="M9">
+
+		<!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="@person-group-type=('author','compiler', 'curator')"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warning-elem-cit-data-2-2] The only valid @person-group-type values are author,compiler, curator. Reference '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+               <xsl:text>' has a &lt;person-group&gt; element with type '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@person-group-type"/>
+               <xsl:text>'.</xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M9"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M9">
+      <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
+                           of an attribute-->
+         <xsl:when test="not(@*)">
+            <xsl:apply-templates select="node()" mode="M9"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:apply-templates select="@*|node()" mode="M9"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -1670,7 +1891,7 @@
 	  <!--RULE elem-citation-patent-->
    <xsl:template match="element-citation[@publication-type='patent']"
                  priority="105"
-                 mode="M7">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1793,13 +2014,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-patent-ext-link-->
    <xsl:template match="element-citation[@publication-type='patent']/ext-link"
                  priority="104"
-                 mode="M7">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1848,13 +2069,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-patent-article-title-->
    <xsl:template match="element-citation[@publication-type='patent']/article-title"
                  priority="103"
-                 mode="M7">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1883,13 +2104,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-patent-source-->
    <xsl:template match="element-citation[@publication-type='patent']/source"
                  priority="102"
-                 mode="M7">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -1918,13 +2139,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-patent-patent-->
    <xsl:template match="element-citation[@publication-type='patent']/patent"
                  priority="101"
-                 mode="M7">
+                 mode="M10">
       <xsl:variable name="countries" select="'countries.xml'"/>
 
 		    <!--ASSERT error-->
@@ -1956,17 +2177,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M7"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M7"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M7">
+   <xsl:template match="text()" priority="-1" mode="M10"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M10">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M7"/>
+            <xsl:apply-templates select="node()" mode="M10"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M7"/>
+            <xsl:apply-templates select="@*|node()" mode="M10"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -1977,7 +2198,7 @@
 	  <!--RULE elem-citation-clinicaltrial-->
    <xsl:template match="element-citation[@publication-type='clinicaltrial']"
                  priority="103"
-                 mode="M8">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2057,13 +2278,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-clinicaltrial-article-title-->
    <xsl:template match="element-citation[@publication-type='clinicaltrial']/article-title"
                  priority="102"
-                 mode="M8">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2078,13 +2299,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-clinicaltrial-ext-link-->
    <xsl:template match="element-citation[@publication-type='clinicaltrial']/ext-link"
                  priority="101"
-                 mode="M8">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2133,17 +2354,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M8"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M8">
+   <xsl:template match="text()" priority="-1" mode="M11"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M11">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M8"/>
+            <xsl:apply-templates select="node()" mode="M11"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M8"/>
+            <xsl:apply-templates select="@*|node()" mode="M11"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2154,7 +2375,7 @@
 	  <!--RULE elem-citation-software-->
    <xsl:template match="element-citation[@publication-type='software']"
                  priority="103"
-                 mode="M9">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2215,13 +2436,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-software-data-title-->
    <xsl:template match="element-citation[@publication-type='software']/data-title"
                  priority="102"
-                 mode="M9">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2236,13 +2457,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-software-ext-link-->
    <xsl:template match="element-citation[@publication-type='software']/ext-link"
                  priority="101"
-                 mode="M9">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2291,17 +2512,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M9"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M9">
+   <xsl:template match="text()" priority="-1" mode="M12"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M12">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M9"/>
+            <xsl:apply-templates select="node()" mode="M12"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M9"/>
+            <xsl:apply-templates select="@*|node()" mode="M12"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2312,7 +2533,7 @@
 	  <!--RULE elem-citation-preprint-->
    <xsl:template match="element-citation[@publication-type='preprint']"
                  priority="106"
-                 mode="M10">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2409,13 +2630,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-person-group-->
    <xsl:template match="element-citation[@publication-type='preprint']/person-group"
                  priority="105"
-                 mode="M10">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2432,13 +2653,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-pub-id-->
    <xsl:template match="element-citation[@publication-type='preprint']/pub-id"
                  priority="104"
-                 mode="M10">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2455,13 +2676,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-ext-link-->
    <xsl:template match="element-citation[@publication-type='preprint']/ext-link"
                  priority="103"
-                 mode="M10">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2510,13 +2731,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-article-title-->
    <xsl:template match="element-citation[@publication-type='preprint']/article-title"
                  priority="102"
-                 mode="M10">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2545,13 +2766,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-source-->
    <xsl:template match="element-citation[@publication-type='preprint']/source"
                  priority="101"
-                 mode="M10">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2580,17 +2801,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M10"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M10">
+   <xsl:template match="text()" priority="-1" mode="M13"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M13">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M10"/>
+            <xsl:apply-templates select="node()" mode="M13"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M10"/>
+            <xsl:apply-templates select="@*|node()" mode="M13"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2601,7 +2822,7 @@
 	  <!--RULE elem-citation-web-->
    <xsl:template match="element-citation[@publication-type='web']"
                  priority="106"
-                 mode="M11">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2694,13 +2915,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-person-group-->
    <xsl:template match="element-citation[@publication-type='web']/person-group"
                  priority="105"
-                 mode="M11">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2717,13 +2938,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-ext-link-->
    <xsl:template match="element-citation[@publication-type='web']/ext-link"
                  priority="104"
-                 mode="M11">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2772,13 +2993,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-article-title-->
    <xsl:template match="element-citation[@publication-type='web']/article-title"
                  priority="103"
-                 mode="M11">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2807,13 +3028,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-source-->
    <xsl:template match="element-citation[@publication-type='web']/source"
                  priority="102"
-                 mode="M11">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2842,13 +3063,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-date-in-citation-->
    <xsl:template match="element-citation[@publication-type='web']/date-in-citation"
                  priority="101"
-                 mode="M11">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2913,17 +3134,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M11"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M11">
+   <xsl:template match="text()" priority="-1" mode="M14"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M14">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M11"/>
+            <xsl:apply-templates select="node()" mode="M14"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M11"/>
+            <xsl:apply-templates select="@*|node()" mode="M14"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2934,7 +3155,7 @@
 	  <!--RULE elem-citation-report-->
    <xsl:template match="element-citation[@publication-type='report']"
                  priority="106"
-                 mode="M12">
+                 mode="M15">
       <xsl:variable name="publisher-locations" select="'publisher-locations.xml'"/>
 
 		    <!--ASSERT error-->
@@ -3011,13 +3232,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-preson-group-->
    <xsl:template match="element-citation[@publication-type='report']/person-group"
                  priority="105"
-                 mode="M12">
+                 mode="M15">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3034,13 +3255,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-source-->
    <xsl:template match="element-citation[@publication-type='report']/source"
                  priority="104"
-                 mode="M12">
+                 mode="M15">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3069,13 +3290,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-publisher-name-->
    <xsl:template match="element-citation[@publication-type='report']/publisher-name"
                  priority="103"
-                 mode="M12">
+                 mode="M15">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3090,13 +3311,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-pub-id-->
    <xsl:template match="element-citation[@publication-type='report']/pub-id"
                  priority="102"
-                 mode="M12">
+                 mode="M15">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3113,13 +3334,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-ext-link-->
    <xsl:template match="element-citation[@publication-type='report']/ext-link"
                  priority="101"
-                 mode="M12">
+                 mode="M15">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3168,17 +3389,53 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M12"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M12">
+   <xsl:template match="text()" priority="-1" mode="M15"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M15">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M12"/>
+            <xsl:apply-templates select="node()" mode="M15"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M12"/>
+            <xsl:apply-templates select="@*|node()" mode="M15"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+
+   <!--PATTERN element-citation-report-pre-edit-testselement-citation publication-type="report" Pre-edit Tests-->
+
+
+	  <!--RULE elem-citation-report-pre-edit-->
+   <xsl:template match="element-citation[@publication-type='report']"
+                 priority="101"
+                 mode="M16">
+
+		<!--ASSERT warning-->
+      <xsl:choose>
+         <xsl:when test="count(publisher-loc) = 1"/>
+         <xsl:otherwise>
+            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
+               <xsl:text>Warning:</xsl:text>
+               <xsl:text>[warning-elem-cit-report-10] There should be a &lt;publisher-loc&gt; element within a &lt;element-citation&gt; of type 'report'. Reference '</xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
+               <xsl:text>' does not have one &lt;publisher-loc&gt; element.</xsl:text>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M16"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M16"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M16">
+      <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
+                           of an attribute-->
+         <xsl:when test="not(@*)">
+            <xsl:apply-templates select="node()" mode="M16"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:apply-templates select="@*|node()" mode="M16"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -3189,7 +3446,7 @@
 	  <!--RULE elem-citation-confproc-->
    <xsl:template match="element-citation[@publication-type='confproc']"
                  priority="109"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3351,13 +3608,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-preson-group-->
    <xsl:template match="element-citation[@publication-type='confproc']/person-group"
                  priority="108"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3374,13 +3631,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-source-->
    <xsl:template match="element-citation[@publication-type='confproc']/source"
                  priority="107"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3409,13 +3666,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-article-title-->
    <xsl:template match="element-citation[@publication-type='confproc']/article-title"
                  priority="106"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3430,13 +3687,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-conf-name-->
    <xsl:template match="element-citation[@publication-type='confproc']/conf-name"
                  priority="105"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3451,13 +3708,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-conf-loc-->
    <xsl:template match="element-citation[@publication-type='confproc']/conf-loc"
                  priority="104"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3472,13 +3729,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-fpage-->
    <xsl:template match="element-citation[@publication-type='confproc']/fpage"
                  priority="103"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3497,13 +3754,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-pub-id-->
    <xsl:template match="element-citation[@publication-type='confproc']/pub-id"
                  priority="102"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3520,13 +3777,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-ext-link-->
    <xsl:template match="element-citation[@publication-type='confproc']/ext-link"
                  priority="101"
-                 mode="M13">
+                 mode="M17">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3575,17 +3832,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M17"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M13"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M13">
+   <xsl:template match="text()" priority="-1" mode="M17"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M17">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M13"/>
+            <xsl:apply-templates select="node()" mode="M17"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M13"/>
+            <xsl:apply-templates select="@*|node()" mode="M17"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -3596,7 +3853,7 @@
 	  <!--RULE elem-citation-thesis-->
    <xsl:template match="element-citation[@publication-type='thesis']"
                  priority="107"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3707,13 +3964,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-preson-group-->
    <xsl:template match="element-citation[@publication-type='thesis']/person-group"
                  priority="106"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3746,13 +4003,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-article-title-->
    <xsl:template match="element-citation[@publication-type='thesis']/article-title"
                  priority="105"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3767,13 +4024,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-publisher-name-->
    <xsl:template match="element-citation[@publication-type='thesis']/publisher-name"
                  priority="104"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3788,13 +4045,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-publisher-loc-->
    <xsl:template match="element-citation[@publication-type='thesis']/publisher-loc"
                  priority="103"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3809,13 +4066,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-pub-id-->
    <xsl:template match="element-citation[@publication-type='thesis']/pub-id"
                  priority="102"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3832,13 +4089,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-ext-link-->
    <xsl:template match="element-citation[@publication-type='thesis']/ext-link"
                  priority="101"
-                 mode="M14">
+                 mode="M18">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3887,17 +4144,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M18"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M14"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M14">
+   <xsl:template match="text()" priority="-1" mode="M18"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M18">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M14"/>
+            <xsl:apply-templates select="node()" mode="M18"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M14"/>
+            <xsl:apply-templates select="@*|node()" mode="M18"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -3908,7 +4165,7 @@
 	  <!--RULE elem-citation-periodical-->
    <xsl:template match="element-citation[@publication-type='periodical']"
                  priority="108"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4129,13 +4386,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-year-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date/year"
                  priority="107"
-                 mode="M15">
+                 mode="M19">
       <xsl:variable name="YYYY" select="substring(normalize-space(.), 1, 4)"/>
       <xsl:variable name="current-year" select="year-from-date(current-date())"/>
 
@@ -4262,13 +4519,13 @@
             <xsl:text>'.</xsl:text>
          </xsl:message>
       </xsl:if>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-article-title-->
    <xsl:template match="element-citation[@publication-type='periodical']/article-title"
                  priority="106"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4283,13 +4540,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-volume-->
    <xsl:template match="element-citation[@publication-type='periodical']/volume"
                  priority="105"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4304,13 +4561,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-fpage-->
    <xsl:template match="element-citation[@publication-type='periodical']/fpage"
                  priority="104"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4329,13 +4586,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-string-date-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date"
                  priority="103"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4386,13 +4643,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-month-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date/month"
                  priority="102"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4428,13 +4685,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-day-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date/day"
                  priority="101"
-                 mode="M15">
+                 mode="M19">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4470,17 +4727,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M19"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M15"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M15">
+   <xsl:template match="text()" priority="-1" mode="M19"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M19">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M15"/>
+            <xsl:apply-templates select="node()" mode="M19"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M15"/>
+            <xsl:apply-templates select="@*|node()" mode="M19"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>

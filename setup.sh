@@ -17,4 +17,5 @@ if [ ! -d $SCRIPTPATH/reference-schematron ]; then
   git clone https://github.com/elifesciences/reference-schematron.git
   cd $SCRIPTPATH/reference-schematron
   ln -s ../eLife-elem-citation-driver-final-compiled.xsl ./
+  ln -s ../eLife-elem-citation-driver-pre-edit-compiled.xsl ./
 fi
