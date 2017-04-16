@@ -8,7 +8,7 @@ do
   if [ -f $f -a -r $f ]; then
     echo ":start $f:"
     echo ""
-    java -jar Saxon-HE-9.6.0-4.jar "$f" "$SCRIPTPATH/reference-schematron/eLife-elem-citation-driver-pre-edit-compiled.xsl"
+    java -jar Saxon-HE-9.6.0-4.jar "$f" "$SCRIPTPATH/reference-schematron/eLife-elem-citation-driver-pre-edit-compiled.xsl" 2>&1 | sed -e 's/&gt;/>/g' | sed -e 's/&lt;/</g' | sed -e 's/<?xml.*//g'
     echo ""
     echo ":finish $f:"
   else
