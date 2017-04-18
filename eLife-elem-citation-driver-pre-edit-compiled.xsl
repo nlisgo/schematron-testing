@@ -844,7 +844,7 @@
       </xsl:if>
 
 		    <!--REPORT error-->
-      <xsl:if test="lpage and (number(fpage) &gt;= number(lpage[1]))">
+      <xsl:if test="lpage and (number(fpage[1]) &gt;= number(lpage[1]))">
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Error:</xsl:text>
@@ -956,7 +956,7 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="matches(normalize-space(.),'^\d.*') or (substring(normalize-space(../lpage),1,1) = substring(normalize-space(.),1,1)) or count(../lpage) eq 0"/>
+         <xsl:when test="matches(normalize-space(.),'^\d.*') or (substring(normalize-space(../lpage[1]),1,1) = substring(normalize-space(.),1,1)) or count(../lpage) eq 0"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
@@ -1116,7 +1116,7 @@
       </xsl:if>
 
 		    <!--REPORT warning-->
-      <xsl:if test="matches(fpage,'\D') or matches(lpage, '\D')">
+      <xsl:if test="matches(fpage[1],'\D') or matches(lpage[1], '\D')">
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Warning:</xsl:text>
@@ -1143,7 +1143,7 @@
 
 		    <!--ASSERT warning-->
       <xsl:choose>
-         <xsl:when test="pub-id/@pub-id-type='doi' or       (normalize-space(document($journal-doi)/journals/journal[name=normalize-space(current()/source)]/year) &gt; substring(normalize-space(year),1,4))"/>
+         <xsl:when test="pub-id/@pub-id-type='doi' or       (normalize-space(document($journal-doi)/journals/journal[name=normalize-space(current()/source)]/year) &gt; substring(normalize-space(year[1]),1,4))"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
