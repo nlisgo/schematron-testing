@@ -33,10 +33,10 @@ To get cleaner output:
 java -jar Saxon-HE-9.6.0-4.jar ./article-xml/elife-00003-v1.xml ./reference-schematron/eLife-elem-citation-driver-final-compiled.xsl 2>&1 | sed -e 's/&gt;/>/g' | sed -e 's/&lt;/</g' | sed -e 's/<?xml.*//g'
 ```
 
-The output should only contain schematron error and warning violations but at the moment there are some bugs which are interrupting the schematron validation. This is affecting 17 article version XMLs (7 fail both `./validate_xml_final.sh` and `./validate_xml_pre_edit.sh` runs) and there has been 1 type of error fired in the `./validate_xml_final.sh` run and 3 different types of error fired in the `./validate_xml_pre_edit.sh` run.
+The output should only contain schematron error and warning violations. If there are no violations then we expect no output.
 
 The article version XMLs that were tested were all those available in the https://github.com/elifesciences/elife-article-xml repository at commit [6e820f84e1c54efdb59508c0a6609a80ddebefc7](https://github.com/elifesciences/elife-article-xml/tree/6e820f84e1c54efdb59508c0a6609a80ddebefc7/articles).
 
 See:
-- [./errors-summary/errors-summary-final.txt](errors-summary/errors-summary-final.txt)
-- [./errors-summary/errors-summary-pre-edit.txt](errors-summary/errors-summary-pre-edit.txt)
+- [./logs/log-final.txt](logs/log-final.txt)
+- [./logs/log-pre-edit.txt](logs/log-pre-edit.txt)
