@@ -186,7 +186,6 @@
       <xsl:apply-templates select="/" mode="M12"/>
       <xsl:apply-templates select="/" mode="M13"/>
       <xsl:apply-templates select="/" mode="M14"/>
-      <xsl:apply-templates select="/" mode="M15"/>
    </xsl:template>
 
    <!--SCHEMATRON PATTERNS-->
@@ -229,7 +228,7 @@
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
             <xsl:text>' has </xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(year)"/>
-            <xsl:text> &lt;year&gt; elements.. </xsl:text>
+            <xsl:text> &lt;year&gt; elements. </xsl:text>
          </xsl:message>
       </xsl:if>
       <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M2"/>
@@ -265,7 +264,7 @@
                <xsl:text>Error:</xsl:text>
                <xsl:text>[err-elem-cit-gen-name-3-2] A &lt;collab&gt; element in a reference may contain characters and &lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' does not meet this requirement.</xsl:text>
+               <xsl:text>' contains addiitonal elements.</xsl:text>
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
@@ -305,7 +304,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-gen-date-1-1] The &lt;year&gt; element in a reference must contain 4 digits, possibly followed by one (but not more) lower-case letter. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-gen-date-1-1] The &lt;year&gt; element in a reference must contain 4 digits, possibly followed by one (and only one) lower-case letter. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' does not meet this requirement as it contains the value '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="."/>
@@ -337,7 +336,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-gen-date-1-3] The &lt;year&gt; element must have an @iso-8601-date attribute. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-gen-date-1-3] All &lt;year&gt; elements must have @iso-8601-date attributes. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' does not. </xsl:text>
             </xsl:message>
@@ -476,7 +475,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-high-2-2] The order of &lt;element-citation&gt;s should be name and date, arranged alphabetically by the first author’s surname, or the value of the first &lt;collab&gt; element. In the case of two authors, the sequence is arranged by both authors' surnames, then date. For three or more authors, the sequence is the first author's surname, then date. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-high-2-2] The order of &lt;element-citation&gt;s in the reference list should be name and date, arranged alphabetically by the first author’s surname, or by the value of the first &lt;collab&gt; element. In the case of two authors, the sequence should be arranged by both authors' surnames, then date. For three or more authors, the sequence should be the first author's surname, then date. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@id"/>
                <xsl:text>' appears to be in a different order. </xsl:text>
             </xsl:message>
@@ -518,11 +517,11 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-high-3-3] The sequence of ids in the &lt;ref&gt; elements must increase monotonically. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-high-3-3] The sequence of ids in the &lt;ref&gt; elements must increase monotonically (e.g. 1,2,3,4,5, . . . ,50,51,52,53, . . . etc). Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@id"/>
                <xsl:text>' has the value '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@id"/>
-               <xsl:text>', which does not. </xsl:text>
+               <xsl:text>', which does not fit this pattern. </xsl:text>
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
@@ -541,7 +540,7 @@
                <xsl:text> and </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="$name2"/>
                <xsl:text> [err-elem-cit-high-4] </xsl:text>
-               <xsl:text> If an element-citation/person-group contains one &lt;name&gt;, the content of the &lt;surname&gt; inside that name must appear in the content of all &lt;xref&gt;s that point to the &lt;element-citation&gt;. If an element-citation/person-group contains 2 &lt;name&gt;s, the content of the first &lt;surname&gt; of the first &lt;name&gt;, followed by the string “ and “, followed by the content of the &lt;surname&gt; of the second &lt;name&gt; must appear in the content of all &lt;xref&gt;s that point to the &lt;element-citation&gt;. If there are more than 2 &lt;name&gt;s in the &lt;person-group&gt;, &lt;xref&gt; that point to that citation must contain the content of only the first of the &lt;surname&gt;s, followed by the text "et al." All of these are followed by ', ' and the year, or the year in parentheses. There are </xsl:text>
+               <xsl:text> If an element-citation/person-group contains one &lt;name&gt;, the content of the &lt;surname&gt; inside that name must appear in the content of all &lt;xref&gt;s that point to the &lt;element-citation&gt;. If an element-citation/person-group contains 2 &lt;name&gt;s, the content of the first &lt;surname&gt; of the first &lt;name&gt;, followed by the string “ and “, followed by the content of the &lt;surname&gt; of the second &lt;name&gt; must appear in the content of all &lt;xref&gt;s that point to the &lt;element-citation&gt;. If there are more than 2 &lt;name&gt;s in the &lt;person-group&gt;, all &lt;xref&gt;s that point to that reference must contain the content of only the first of the &lt;surname&gt;s, followed by the text "et al." All of these are followed by ', ' and the year, or by the year in parentheses. There are </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
                              select="count(//xref[@rid=current()/@id]/@rid)"/>
                <xsl:text> &lt;xref&gt; references with @rid = </xsl:text>
@@ -561,16 +560,16 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-high-5] All xrefs to &lt;ref&gt;s, which contain &lt;element-citation&gt;s, should contain, as the last part of their content, the string ", " followed by the content of the year element in the &lt;element-citation&gt;, or the year in parentheses. There are </xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
-                             select="count(//xref[@rid=current()/@id]/@rid)"/>
-               <xsl:text> references to be checked; the incorrect &lt;xref&gt; has @rid </xsl:text>
+               <xsl:text>[err-elem-cit-high-5] All xrefs to &lt;ref&gt;s, which contain &lt;element-citation&gt;s, should contain, as the last part of their content, the string ", " followed by the content of the year element in the &lt;element-citation&gt;, or the year in parentheses. There is an incorrect &lt;xref&gt; with @rid </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@id"/>
-               <xsl:text> and should contain the string ', </xsl:text>
+               <xsl:text>. It should contain the string ', </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="element-citation/year"/>
                <xsl:text>' or the string '(</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="element-citation/year"/>
-               <xsl:text>)' but does not. </xsl:text>
+               <xsl:text>)' but does not. There are </xsl:text>
+               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
+                             select="count(//xref[@rid=current()/@id]/@rid)"/>
+               <xsl:text> references to be checked. </xsl:text>
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
@@ -615,12 +614,12 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="@publication-type = 'journal' or                     @publication-type = 'book'    or                     @publication-type = 'data'    or                     @publication-type = 'patent'    or                     @publication-type = 'clinicaltrial' or                     @publication-type = 'software'    or                     @publication-type = 'preprint' or                     @publication-type = 'web'    or                     @publication-type = 'periodical' or                     @publication-type = 'report'    or                     @publication-type = 'confproc'    or                     @publication-type = 'thesis'"/>
+         <xsl:when test="@publication-type = 'journal' or                     @publication-type = 'book'    or                     @publication-type = 'data'    or                     @publication-type = 'patent'    or                     @publication-type = 'software'    or                     @publication-type = 'preprint' or                     @publication-type = 'web'    or                     @publication-type = 'periodical' or                     @publication-type = 'report'    or                     @publication-type = 'confproc'    or                     @publication-type = 'thesis'"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-high-6-2] The publication-type attribute may only take the values 'journal', 'book', 'data', 'patent', 'clinicaltrial', 'software', 'preprint', 'web', 'periodical', 'report', 'confproc', or 'thesis'. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-high-6-2] The publication-type attribute may only take the values 'journal', 'book', 'data', 'patent', 'software', 'preprint', 'web', 'periodical', 'report', 'confproc', or 'thesis'. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="../@id"/>
                <xsl:text>' has the publication-type '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@publication-type"/>
@@ -674,7 +673,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-journal-2-2] Each &lt;element-citation&gt; of type 'journal' must contain one &lt;person-group&gt; with the attribute person-group-type set to 'author'. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-journal-2-2] Each &lt;element-citation&gt; of type 'journal' must contain one &lt;person-group&gt; with the attribute person-group-type 'author'. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has a &lt;person-group&gt; type of '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
@@ -732,12 +731,12 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="count(source)=1 and count(source/*)=count(source/(italic | sub | sup))"/>
+         <xsl:when test="count(source)=1 and count(source/*)=0"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-journal-4-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'journal' may only contain the child elements&lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-journal-4-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'journal' may not contain child elements. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has disallowed child elements.</xsl:text>
             </xsl:message>
@@ -751,7 +750,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-journal-5-1-3] There may be at most one &lt;volume&gt; element within a &lt;element-citation&gt; of type 'journal'. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-journal-5-1-3] There may be no more than one &lt;volume&gt; element within a &lt;element-citation&gt; of type 'journal'. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(volume)"/>
@@ -805,7 +804,7 @@
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Error:</xsl:text>
-            <xsl:text>[err-elem-cit-journal-6-7] The following tags may not occur more than once in an &lt;element-citation&gt;: &lt;fpage&gt;, &lt;lpage&gt;, &lt;elocation-id&gt;, and &lt;comment&gt;In press&lt;/comment&gt;. Reference '</xsl:text>
+            <xsl:text>[err-elem-cit-journal-6-7] The following elements may not occur more than once in an &lt;element-citation&gt;: &lt;fpage&gt;, &lt;lpage&gt;, &lt;elocation-id&gt;, and &lt;comment&gt;In press&lt;/comment&gt;. Reference '</xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
             <xsl:text>' has </xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(fpage)"/>
@@ -826,7 +825,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-journal-12] The only tags that are allowed as children of &lt;element-citation&gt; with the publication-type="journal" are: &lt;person-group&gt;, &lt;year&gt;, &lt;article-title&gt;, &lt;source&gt;, &lt;volume&gt;, &lt;fpage&gt;, &lt;lpage&gt;, &lt;elocation-id&gt;, &lt;comment&gt;, and &lt;pub-id&gt;. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-journal-12] The only elements allowed as children of &lt;element-citation&gt; with the publication-type="journal" are: &lt;person-group&gt;, &lt;year&gt;, &lt;article-title&gt;, &lt;source&gt;, &lt;volume&gt;, &lt;fpage&gt;, &lt;lpage&gt;, &lt;elocation-id&gt;, &lt;comment&gt;, and &lt;pub-id&gt;. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has other elements.</xsl:text>
             </xsl:message>
@@ -978,7 +977,7 @@
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Error:</xsl:text>
-            <xsl:text>[err-elem-cit-journal-10] If &lt;pub-id pub-id-type="pmid"&gt; the content must be all numeric. The content of &lt;pub-id pub-id-type="pmid"&gt; in Reference '</xsl:text>
+            <xsl:text>[err-elem-cit-journal-10] If &lt;pub-id pub-id-type="pmid"&gt; is present, the content must be all numeric. The content of &lt;pub-id pub-id-type="pmid"&gt; in Reference '</xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
             <xsl:text>' is </xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="."/>
@@ -1000,7 +999,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-journal-9-1] Each &lt;pub-id&gt;, if present, must have a @pub-id-type of either "doi" or "pmid". The pub-id-type attribute on &lt;pub-id&gt; in Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-journal-9-1] Each &lt;pub-id&gt;, if present in a journal reference, must have a @pub-id-type of either "doi" or "pmid". The pub-id-type attribute on &lt;pub-id&gt; in Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' is </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@pub-id-type"/>
@@ -1039,7 +1038,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-book-2-2] The only values allowed for @person-group-type are "author" and "editor". Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-book-2-2] The only values allowed for @person-group-type in book references are "author" and "editor". Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has a &lt;person-group&gt; type of '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
@@ -1051,12 +1050,12 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="count(person-group)=1 or ((count(person-group/@person-group-type='author')+       count(person-group/@person-group-type='editor')=2) and (count(edition)=1 or count(chapter-title)=1))"/>
+         <xsl:when test="count(person-group)=1 or (count(person-group/@person-group-type='author')+       count(person-group/@person-group-type='editor')=2)"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-book-2-3] One and only 1 person-group element is allowed (either author or editor) 3a. unless there is an &lt;edition&gt; element or a &lt;chapter-title element in the &lt;element-citation&gt;, in which case there may be one person-group with @person-group-type="author" and one person-group with @person-group-type=editor. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-book-2-3] In a book reference, there should be a single person-group element (either author or editor) or one person-group with @person-group-type="author" and one person-group with @person-group-type=editor. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(person-group)"/>
@@ -1102,7 +1101,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-book-10-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'book' may may only contain the child elements&lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-book-10-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'book' may only contain the child elements&lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has child elements that are not allowed.</xsl:text>
             </xsl:message>
@@ -1116,7 +1115,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-book-13-1] One and only one &lt;publisher-name&gt; is required. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-book-13-1] One and only one &lt;publisher-name&gt; is required in a book reference. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(publisher-name)"/>
@@ -1143,7 +1142,7 @@
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Error:</xsl:text>
-            <xsl:text>[err-elem-cit-book-16] &lt;lpage&gt; and &lt;fpage&gt; are allowed only if &lt;chapter-title&gt; is present. Reference '</xsl:text>
+            <xsl:text>[err-elem-cit-book-16] In a book reference, &lt;lpage&gt; and &lt;fpage&gt; are allowed only if &lt;chapter-title&gt; is present. Reference '</xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
             <xsl:text>' has &lt;lpage&gt; or &lt;fpage&gt; but no &lt;chapter-title&gt;.</xsl:text>
          </xsl:message>
@@ -1328,7 +1327,7 @@
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Error:</xsl:text>
-            <xsl:text>[err-elem-cit-book-18] If &lt;pub-id pub-id-type="pmid"&gt; the content must be all numeric. The content of &lt;pub-id pub-id-type="pmid"&gt; in Reference '</xsl:text>
+            <xsl:text>[err-elem-cit-book-18] If &lt;pub-id pub-id-type="pmid"&gt; is present, the content must be all numeric. The content of &lt;pub-id pub-id-type="pmid"&gt; in Reference '</xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
             <xsl:text>' is </xsl:text>
             <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="."/>
@@ -1350,7 +1349,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-book-17] Each &lt;pub-id&gt;, if present, must have a @pub-id-type of one of these values: doi, pmid, isbn. The pub-id-type attribute on &lt;pub-id&gt; in Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-book-17] Each &lt;pub-id&gt;, if present in a book reference, must have a @pub-id-type of one of these values: doi, pmid, isbn. The pub-id-type attribute on &lt;pub-id&gt; in Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' is </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@pub-id-type"/>
@@ -1388,7 +1387,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-data-3-1] Only 1 person-group of each type (author, compiler, curator) is allowed. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-data-3-1] Only one person-group of each type (author, compiler, curator) is allowed. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
@@ -1971,199 +1970,22 @@
       </xsl:choose>
    </xsl:template>
 
-   <!--PATTERN element-citation-clinicaltrial-testselement-citation publication-type="clinicaltrial" Tests-->
-
-
-	  <!--RULE elem-citation-clinicaltrial-->
-   <xsl:template match="element-citation[@publication-type='clinicaltrial']"
-                 priority="103"
-                 mode="M8">
-
-		<!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="count(person-group)=1"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-2-1] Each &lt;element-citation&gt; of type 'clinicaltrial' must contain one and only one &lt;person-group&gt; element. Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' has </xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(person-group)"/>
-               <xsl:text> &lt;person-group&gt; elements.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="person-group[@person-group-type=('author', 'collaborator', 'sponsor')]"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-2-2] Each &lt;element-citation&gt; of type 'clinicaltrial' must contain one &lt;person-group&gt; with the attribute person-group-type set to 'author', 'collaborator', or 'sponsor'. Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' has a &lt;person-group&gt; type of '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron"
-                             select="person-group/@person-group-type"/>
-               <xsl:text>'.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="count(article-title)=1"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-8-1] Each &lt;element-citation&gt; of type 'clinicaltrial' must contain one and only one &lt;article-title&gt; element. Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' has </xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(article-title)"/>
-               <xsl:text> &lt;article-title&gt; elements.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="count(ext-link)=1"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-10-1] Each &lt;element-citation&gt; of type 'clinicaltrial' must contain one and only one &lt;ext-link&gt; element. Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' has </xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(ext-link)"/>
-               <xsl:text> &lt;ext-link&gt; elements.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="count(*) = count(person-group| year| article-title| source| ext-link)"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-11] The only tags that are allowed as children of &lt;element-citation&gt; with the publication-type="clinicaltrial" are: &lt;person-group&gt;, &lt;year&gt;, &lt;article-title&gt;, &lt;source&gt;, and &lt;ext-link&gt; Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' has other elements.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
-   </xsl:template>
-
-	  <!--RULE elem-citation-clinicaltrial-article-title-->
-   <xsl:template match="element-citation[@publication-type='clinicaltrial']/article-title"
-                 priority="102"
-                 mode="M8">
-
-		<!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="count(*) = count(sub|sup|italic)"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-8-2] An &lt;article-title&gt; element in a reference may contain characters and &lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' does not meet this requirement.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
-   </xsl:template>
-
-	  <!--RULE elem-citation-clinicaltrial-ext-link-->
-   <xsl:template match="element-citation[@publication-type='clinicaltrial']/ext-link"
-                 priority="101"
-                 mode="M8">
-
-		<!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="@xlink:href"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-10-2] Each &lt;ext-link&gt; element must contain @xlink:href. The &lt;ext-link&gt; element in Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' does not.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="starts-with(@xlink:href, 'http://') or starts-with(@xlink:href, 'https://')"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-10-3] The value of @xlink:href must start with either "http://" or "https://". The &lt;ext-link&gt; element in Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' is '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@xlink:href"/>
-               <xsl:text>', which does not.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT error-->
-      <xsl:choose>
-         <xsl:when test="normalize-space(@xlink:href)=normalize-space(.)"/>
-         <xsl:otherwise>
-            <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
-                         xmlns:osf="http://www.oxygenxml.com/sch/functions">
-               <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-clinicaltrial-10-4] The value of @xlink:href must be the same as the element content of &lt;ext-link&gt;. The &lt;ext-link&gt; element in Reference '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
-               <xsl:text>' has @xlink:href='</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="@xlink:href"/>
-               <xsl:text>' and content '</xsl:text>
-               <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="."/>
-               <xsl:text>'.</xsl:text>
-            </xsl:message>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M8"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M8">
-      <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
-                           of an attribute-->
-         <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M8"/>
-         </xsl:when>
-         <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M8"/>
-         </xsl:otherwise>
-      </xsl:choose>
-   </xsl:template>
-
    <!--PATTERN element-citation-software-testselement-citation publication-type="software" Tests-->
 
 
 	  <!--RULE elem-citation-software-->
-   <xsl:template match="element-citation[@publication-type='software']"
+   <xsl:template match="element-citation[@publication-type = 'software']"
                  priority="103"
-                 mode="M9">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="count(person-group)=1"/>
+         <xsl:when test="count(person-group) = 1 or (count(person-group/@person-group-type = 'author') +         count(person-group/@person-group-type = 'editor') = 2)"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-software-2-1] Each &lt;element-citation&gt; of type 'software' must contain one and only one &lt;person-group&gt; element. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-software-2-1] Each &lt;element-citation&gt; of type 'software' must contain one &lt;person-group&gt; element (either author or curator) or one &lt;person-group&gt; with attribute person-group-type = author and one &lt;person-group&gt; with attribute person-group-type = curator. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(person-group)"/>
@@ -2174,7 +1996,7 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="person-group[@person-group-type=('author', 'curator')]"/>
+         <xsl:when test="person-group[@person-group-type = ('author', 'curator')]"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
@@ -2190,7 +2012,7 @@
       </xsl:choose>
 
 		    <!--REPORT error-->
-      <xsl:if test="count(data-title)&gt;1">
+      <xsl:if test="count(data-title) &gt; 1">
          <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                       xmlns:osf="http://www.oxygenxml.com/sch/functions">
             <xsl:text>Error:</xsl:text>
@@ -2204,7 +2026,7 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="count(*) = count(person-group| year| data-title| source|version| publisher-name|publisher-loc|ext-link)"/>
+         <xsl:when test="count(*) = count(person-group | year | data-title | source | version | publisher-name | publisher-loc | ext-link)"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
@@ -2215,17 +2037,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-software-data-title-->
-   <xsl:template match="element-citation[@publication-type='software']/data-title"
+   <xsl:template match="element-citation[@publication-type = 'software']/data-title"
                  priority="102"
-                 mode="M9">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="count(*) = count(sub|sup|italic)"/>
+         <xsl:when test="count(*) = count(sub | sup | italic)"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
@@ -2236,13 +2058,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-software-ext-link-->
-   <xsl:template match="element-citation[@publication-type='software']/ext-link"
+   <xsl:template match="element-citation[@publication-type = 'software']/ext-link"
                  priority="101"
-                 mode="M9">
+                 mode="M8">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2276,7 +2098,7 @@
 
 		    <!--ASSERT error-->
       <xsl:choose>
-         <xsl:when test="normalize-space(@xlink:href)=normalize-space(.)"/>
+         <xsl:when test="normalize-space(@xlink:href) = normalize-space(.)"/>
          <xsl:otherwise>
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
@@ -2291,17 +2113,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M8"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M9"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M9">
+   <xsl:template match="text()" priority="-1" mode="M8"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M8">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M9"/>
+            <xsl:apply-templates select="node()" mode="M8"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M9"/>
+            <xsl:apply-templates select="@*|node()" mode="M8"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2312,7 +2134,7 @@
 	  <!--RULE elem-citation-preprint-->
    <xsl:template match="element-citation[@publication-type='preprint']"
                  priority="106"
-                 mode="M10">
+                 mode="M9">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2385,7 +2207,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-preprint-10-3] Either one &lt;pub-id&gt; or one &lt;ext-link&gt; element is required. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-preprint-10-3] Either one &lt;pub-id&gt; or one &lt;ext-link&gt; element is required in a preprint reference. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has </xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="count(pub-id)"/>
@@ -2409,13 +2231,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-person-group-->
    <xsl:template match="element-citation[@publication-type='preprint']/person-group"
                  priority="105"
-                 mode="M10">
+                 mode="M9">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2432,13 +2254,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-pub-id-->
    <xsl:template match="element-citation[@publication-type='preprint']/pub-id"
                  priority="104"
-                 mode="M10">
+                 mode="M9">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2455,13 +2277,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-ext-link-->
    <xsl:template match="element-citation[@publication-type='preprint']/ext-link"
                  priority="103"
-                 mode="M10">
+                 mode="M9">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2510,13 +2332,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-article-title-->
    <xsl:template match="element-citation[@publication-type='preprint']/article-title"
                  priority="102"
-                 mode="M10">
+                 mode="M9">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2545,13 +2367,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-preprint-source-->
    <xsl:template match="element-citation[@publication-type='preprint']/source"
                  priority="101"
-                 mode="M10">
+                 mode="M9">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2580,17 +2402,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M9"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M10"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M10">
+   <xsl:template match="text()" priority="-1" mode="M9"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M9">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M10"/>
+            <xsl:apply-templates select="node()" mode="M9"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M10"/>
+            <xsl:apply-templates select="@*|node()" mode="M9"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2601,7 +2423,7 @@
 	  <!--RULE elem-citation-web-->
    <xsl:template match="element-citation[@publication-type='web']"
                  priority="106"
-                 mode="M11">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2694,13 +2516,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-person-group-->
    <xsl:template match="element-citation[@publication-type='web']/person-group"
                  priority="105"
-                 mode="M11">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2717,13 +2539,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-ext-link-->
    <xsl:template match="element-citation[@publication-type='web']/ext-link"
                  priority="104"
-                 mode="M11">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2772,13 +2594,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-article-title-->
    <xsl:template match="element-citation[@publication-type='web']/article-title"
                  priority="103"
-                 mode="M11">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2807,13 +2629,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-source-->
    <xsl:template match="element-citation[@publication-type='web']/source"
                  priority="102"
-                 mode="M11">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2842,13 +2664,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-web-date-in-citation-->
    <xsl:template match="element-citation[@publication-type='web']/date-in-citation"
                  priority="101"
-                 mode="M11">
+                 mode="M10">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -2857,7 +2679,7 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-web-11-2-2] The &lt;date-in-citation&gt; element must have an @iso-8601-date attribute. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-web-11-2-1] The &lt;date-in-citation&gt; element must have an @iso-8601-date attribute. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' does not. </xsl:text>
             </xsl:message>
@@ -2913,17 +2735,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M10"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M11"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M11">
+   <xsl:template match="text()" priority="-1" mode="M10"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M10">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M11"/>
+            <xsl:apply-templates select="node()" mode="M10"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M11"/>
+            <xsl:apply-templates select="@*|node()" mode="M10"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -2934,7 +2756,7 @@
 	  <!--RULE elem-citation-report-->
    <xsl:template match="element-citation[@publication-type='report']"
                  priority="106"
-                 mode="M12">
+                 mode="M11">
       <xsl:variable name="publisher-locations" select="'publisher-locations.xml'"/>
 
 		    <!--ASSERT error-->
@@ -3011,13 +2833,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-preson-group-->
    <xsl:template match="element-citation[@publication-type='report']/person-group"
                  priority="105"
-                 mode="M12">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3034,13 +2856,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-source-->
    <xsl:template match="element-citation[@publication-type='report']/source"
                  priority="104"
-                 mode="M12">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3063,19 +2885,19 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-report-9-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'report' may only contain the child elements&lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-report-9-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'report' may only contain the child elements: &lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has child elements that are not allowed.</xsl:text>
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-publisher-name-->
    <xsl:template match="element-citation[@publication-type='report']/publisher-name"
                  priority="103"
-                 mode="M12">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3090,13 +2912,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-pub-id-->
    <xsl:template match="element-citation[@publication-type='report']/pub-id"
                  priority="102"
-                 mode="M12">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3113,13 +2935,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-report-ext-link-->
    <xsl:template match="element-citation[@publication-type='report']/ext-link"
                  priority="101"
-                 mode="M12">
+                 mode="M11">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3168,17 +2990,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M11"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M12"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M12">
+   <xsl:template match="text()" priority="-1" mode="M11"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M11">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M12"/>
+            <xsl:apply-templates select="node()" mode="M11"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M12"/>
+            <xsl:apply-templates select="@*|node()" mode="M11"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -3189,7 +3011,7 @@
 	  <!--RULE elem-citation-confproc-->
    <xsl:template match="element-citation[@publication-type='confproc']"
                  priority="109"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3351,13 +3173,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-preson-group-->
    <xsl:template match="element-citation[@publication-type='confproc']/person-group"
                  priority="108"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3374,13 +3196,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-source-->
    <xsl:template match="element-citation[@publication-type='confproc']/source"
                  priority="107"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3403,19 +3225,19 @@
             <xsl:message xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                          xmlns:osf="http://www.oxygenxml.com/sch/functions">
                <xsl:text>Error:</xsl:text>
-               <xsl:text>[err-elem-cit-confproc-9-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'confproc' may may only contain the child elements&lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
+               <xsl:text>[err-elem-cit-confproc-9-2-2] A &lt;source&gt; element within a &lt;element-citation&gt; of type 'confproc' may only contain the child elements&lt;italic&gt;, &lt;sub&gt;, and &lt;sup&gt;. No other elements are allowed. Reference '</xsl:text>
                <xsl:value-of xmlns="http://purl.oclc.org/dsdl/schematron" select="ancestor::ref/@id"/>
                <xsl:text>' has child elements that are not allowed.</xsl:text>
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-article-title-->
    <xsl:template match="element-citation[@publication-type='confproc']/article-title"
                  priority="106"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3430,13 +3252,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-conf-name-->
    <xsl:template match="element-citation[@publication-type='confproc']/conf-name"
                  priority="105"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3451,13 +3273,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-conf-loc-->
    <xsl:template match="element-citation[@publication-type='confproc']/conf-loc"
                  priority="104"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3472,13 +3294,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-fpage-->
    <xsl:template match="element-citation[@publication-type='confproc']/fpage"
                  priority="103"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3497,13 +3319,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-pub-id-->
    <xsl:template match="element-citation[@publication-type='confproc']/pub-id"
                  priority="102"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3520,13 +3342,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-confproc-ext-link-->
    <xsl:template match="element-citation[@publication-type='confproc']/ext-link"
                  priority="101"
-                 mode="M13">
+                 mode="M12">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3575,17 +3397,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M12"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M13"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M13">
+   <xsl:template match="text()" priority="-1" mode="M12"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M12">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M13"/>
+            <xsl:apply-templates select="node()" mode="M12"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M13"/>
+            <xsl:apply-templates select="@*|node()" mode="M12"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -3596,7 +3418,7 @@
 	  <!--RULE elem-citation-thesis-->
    <xsl:template match="element-citation[@publication-type='thesis']"
                  priority="107"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3707,13 +3529,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-preson-group-->
    <xsl:template match="element-citation[@publication-type='thesis']/person-group"
                  priority="106"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3746,13 +3568,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-article-title-->
    <xsl:template match="element-citation[@publication-type='thesis']/article-title"
                  priority="105"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3767,13 +3589,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-publisher-name-->
    <xsl:template match="element-citation[@publication-type='thesis']/publisher-name"
                  priority="104"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3788,13 +3610,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-publisher-loc-->
    <xsl:template match="element-citation[@publication-type='thesis']/publisher-loc"
                  priority="103"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3809,13 +3631,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-pub-id-->
    <xsl:template match="element-citation[@publication-type='thesis']/pub-id"
                  priority="102"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3832,13 +3654,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-thesis-ext-link-->
    <xsl:template match="element-citation[@publication-type='thesis']/ext-link"
                  priority="101"
-                 mode="M14">
+                 mode="M13">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -3887,17 +3709,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M14"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M14">
+   <xsl:template match="text()" priority="-1" mode="M13"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M13">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M14"/>
+            <xsl:apply-templates select="node()" mode="M13"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M14"/>
+            <xsl:apply-templates select="@*|node()" mode="M13"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -3908,7 +3730,7 @@
 	  <!--RULE elem-citation-periodical-->
    <xsl:template match="element-citation[@publication-type='periodical']"
                  priority="108"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4129,13 +3951,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-year-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date/year"
                  priority="107"
-                 mode="M15">
+                 mode="M14">
       <xsl:variable name="YYYY" select="substring(normalize-space(.), 1, 4)"/>
       <xsl:variable name="current-year" select="year-from-date(current-date())"/>
 
@@ -4262,13 +4084,13 @@
             <xsl:text>'.</xsl:text>
          </xsl:message>
       </xsl:if>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-article-title-->
    <xsl:template match="element-citation[@publication-type='periodical']/article-title"
                  priority="106"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4283,13 +4105,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-volume-->
    <xsl:template match="element-citation[@publication-type='periodical']/volume"
                  priority="105"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4304,13 +4126,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-fpage-->
    <xsl:template match="element-citation[@publication-type='periodical']/fpage"
                  priority="104"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4329,13 +4151,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-string-date-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date"
                  priority="103"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4386,13 +4208,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-month-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date/month"
                  priority="102"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4428,13 +4250,13 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
 
 	  <!--RULE elem-citation-periodical-day-->
    <xsl:template match="element-citation[@publication-type='periodical']/string-date/day"
                  priority="101"
-                 mode="M15">
+                 mode="M14">
 
 		<!--ASSERT error-->
       <xsl:choose>
@@ -4470,17 +4292,17 @@
             </xsl:message>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M15"/>
+      <xsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M14"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M15"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M15">
+   <xsl:template match="text()" priority="-1" mode="M14"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M14">
       <xsl:choose><!--Housekeeping: SAXON warns if attempting to find the attribute
                            of an attribute-->
          <xsl:when test="not(@*)">
-            <xsl:apply-templates select="node()" mode="M15"/>
+            <xsl:apply-templates select="node()" mode="M14"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:apply-templates select="@*|node()" mode="M15"/>
+            <xsl:apply-templates select="@*|node()" mode="M14"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
